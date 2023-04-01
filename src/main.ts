@@ -11,7 +11,7 @@ async function bootstrap() {
       prefetchCount: 1,
       noAck: false,
       queueOptions: {
-        name: 'tasks_queue',
+        name: 'RabbitMQService',
         type: 'direct',
         durable: true,
       },
