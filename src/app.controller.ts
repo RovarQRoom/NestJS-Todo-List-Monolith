@@ -15,6 +15,6 @@ export class AppController {
   @EventPattern('task_created')
   async handleUserCreated(data: any) {
     this.appService.handleUserCreated(data);
-    // console.log('User created: ', data.email);
+    console.log('User created: ', data);
   }
 }

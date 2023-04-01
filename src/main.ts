@@ -8,12 +8,8 @@ async function bootstrap() {
     options: {
       urls: ['amqp://localhost:5672'],
       queue: 'tasks_queue',
-      prefetchCount: 1,
-      noAck: false,
       queueOptions: {
-        name: 'RabbitMQService',
-        type: 'direct',
-        durable: true,
+        durable: false,
       },
     },
   });

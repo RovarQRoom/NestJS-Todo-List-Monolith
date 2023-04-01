@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { TasksCreated } from './Event/task.event';
 
 @Injectable()
 export class AppService {
@@ -6,7 +7,7 @@ export class AppService {
     return 'Hello World!';
   }
 
-  handleUserCreated(data: any) {
+  handleUserCreated(data: TasksCreated) {
     console.log('handleTaskCreated: RabbitMQMessage', data);
   }
 }
