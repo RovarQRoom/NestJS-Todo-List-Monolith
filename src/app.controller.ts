@@ -12,7 +12,7 @@ export class AppController {
     return this.appService.getHello();
   }
 
-  @EventPattern('user_created')
+  @EventPattern('task_created')
   async handleUserCreated(data: any) {
     this.appService.handleUserCreated(data);
     // console.log('User created: ', data.email);
