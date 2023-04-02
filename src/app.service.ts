@@ -7,7 +7,7 @@ export class AppService {
     return 'Hello World!';
   }
 
-  handleUserCreated(data: TasksCreated) {
+  handleUserCreated(data: any) {
     console.log('handleTaskCreated: RabbitMQMessage', data);
   }
 }
