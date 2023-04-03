@@ -6,14 +6,14 @@ import { SigninAuthDto, SignUpAuthDto } from '../../Dtos/auth.dto';
 import { IAuthInterface } from 'src/auth/interface/Iauth.interface';
 import { AuthRepository } from '../../repository/auth.repository';
 import { validate } from 'class-validator';
-import axios from 'axios';
-import { Agent } from 'http';
+import { RabbitmqService } from 'src/rabbitmq/service/rabbitmq/rabbitmq.service';
 
 @Injectable()
 export class AuthService implements IAuthInterface {
     constructor(
         private readonly AuthRepository: AuthRepository,
         private readonly jwtService: JwtService,
+        private readonly rabbitmqService: RabbitmqService
         ){}
 
     // Sign In User And Authentication
@@ -25,7 +25,7 @@ export class AuthService implements IAuthInterface {
             const tokens = await this.getTokens(user._id, user.Email);
             await this.AuthRepository.updatedRtHash(user._id, tokens.refresh_token);
 
-            this.validateUser(tokens.access_token, user._id, user.Email);
+            this.rabbitmqService.send('token-verify', {user: {sub:user._id ,email:user.Email, at: tokens.access_token}});
 
             return tokens;
         }
@@ -132,23 +132,14 @@ export class AuthService implements IAuthInterface {
     }
     // End Creating Tokens For User
 
-     async validateUser(token: string, userId:string, email:string): Promise<any> {
-    try {
-        const agent = new Agent({ keepAlive: true });
-      // Verify token and get user data
-      const response = await axios.post('http://localhost:3000/task/verify-token', { token, userId, email },{httpAgent: agent});
-      const user = response.data.user;
-
-
-      // Return user data along with token
-      const payload = { user };
-      const accessToken = this.jwtService.sign(payload);
-
-      return { accessToken, user };
-    } catch (err) {
-      console.error(err);
-      return null;
-    }
-  }
+//      async validateUser(token: string, userId:string, email:string): Promise<any> {
+//     try {
+//       // Verify token and get user data
+//       await axios.post('http://localhost:3000/task/verify-token', { token, userId, email }, { headers: { 'Content-Type': 'application/json' } });
+//     } catch (err) {
+//       console.error(err);
+//       return null;
+//     }
+//   }
 
 }
